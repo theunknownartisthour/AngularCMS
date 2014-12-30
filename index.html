@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <html data-ng-app="BlazeCMS">
 <head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
 <script src="http://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
 <script src="Lawnchair.js"></script>
@@ -13,73 +18,77 @@
 
 <body>
 <div data-ng-controller="dataController">
-
-Input lol: <textarea data-ng-model="input.lol"></textarea><br>
-Input pop: <input type="text" data-ng-model="input.pop"><br>
-Input kind: <input type="text" value="Post" data-ng-model="input.type"><br>
-<input type="submit" value="clear" data-ng-click="clear()">
-<input type="submit" value="send" data-ng-click="send()"><br>
-<input type="submit" value="eraseAll!" data-ng-click="nuke()">
+<!--input area-->
+<form class="form">
+	<div class="form-group">
+		<label>Input lol</label>
+		<textarea class="form-control" data-ng-model="input.lol"></textarea><br>
+		<label>Input pop</label>
+		<textarea class="form-control" type="text" data-ng-model="input.pop"></textarea><br>
+		<label>Input datatype</label>
+		<textarea class="form-control" type="text" value="Post" data-ng-model="input.type"></textarea><br>
+	</div>
+	<button type="submit" class="btn btn-default" data-ng-click="clear()">Clear</button>
+	<button type="submit" class="btn btn-default" data-ng-click="send()">Save</button>
+	<button type="submit" class="btn btn-danger" data-ng-click="nuke()">Delete All</button>
+</form>
+<!--preview data area-->
 <br>
+<!--view input.lol with markdown-->
 <div markdown="input.lol"></div>
+
+<!--list off all items, (keys are fields) vals are the stored values-->
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>#{{data.length}}</th>
+			<th>lol</th>
+			<th>pop</th>
+			<th>datatype</th>
+			<th>edit</th>
+			<th>delete<th>
+		</tr>
+    </thead>
+	<tbody>
+		<tr class="animate-repeat" data-ng-repeat="item in data">
+			<th scope="row">{{$index+1}}</th>
+			<td data-ng-repeat="(key,val) in item.value">
+				<span markdown="val"><span>
+			</td>
+			<!--this button takes the item's current key and swaps out the content with input-->
+			<td><button type="submit" class="btn btn-danger" data-ng-click="edit(item.key,input)">Edit</button></td>
+			<td><button type="submit" class="btn btn-danger" data-ng-click="remove(item.key)">{{item.key}}</button></td>
+		</tr>
+		<!--what should show up in an "empty list"-->
+		<tr class="animate-repeat" data-ng-if="data.length == 0">
+			<td>
+				No
+			</td>
+			<td>
+				Results
+			</td>
+			<td>
+				Found!
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<table class="table table-striped">
+	<tr>
+		<th>Key</th>
+		<th>Edit</th>
+		<th>Delete</th>
+	</tr>
+	<tr data-ng-repeat="key in keys">
+		<td>{{key}}</td>
+		<td><button type="submit" class="btn btn-danger" data-ng-click="edit(key,input)">Edit</button></td>
+		<td><button type="submit" class="btn btn-danger" data-ng-click="remove(key)">Delete</button></td>
+	</tr>
+</table>
+
+<!--view all persistent data-->
 <div>{{data}}</div>
-<div data-ng-show="exists">Exists!</div>
-<div data-ng-hide="exists">New!</div>
-
-<ul>
-	<li>Items in Data</li>
-	<li data-ng-repeat="item in data">
-		
-		<span data-ng-repeat="(key,val) in item.value">
-			<p>{{key}} = {{val}}</p>
-			<span markdown="val"><span>
-		</span>
-		<input type="submit" value="edit" data-ng-click="edit(item.key,input)"></input><br>
-		Remove <button data-ng-click="remove(item.key)">{{item.key}}</button>
-	</li>
-</ul>
-
-<ul>
-	<li>Items in Keys</li>
-	<li data-ng-repeat="key in keys">
-		{{key}}
-	</li>
-</ul>
-
-</div>
-
-<div data-ng-controller="dataController">
-Input notlol: <input-field field-val="lol"></input-field><br>
-Input notpop: <input type="text" data-ng-model="input.notpop"><br>
-Input kind: <input type="text" value="Page" data-ng-model="input.type"><br>
-
-<input type="submit" value="clear" data-ng-click="clear()">
-<input type="submit" value="send" data-ng-click="send()"><br>
-<input type="submit" value="eraseAll!" data-ng-click="nuke()">
-<br>
-<div>{{input}}</div>
-<div>{{data}}</div>
-<div data-ng-show="exists">Exists!</div>
-<div data-ng-hide="exists">New!</div>
-
-<ul>
-	<li>Items in Data</li>
-	<li data-ng-repeat="item in data">
-		
-		<span data-ng-repeat="(key,val) in item.value">
-			<p>{{key}} = {{val}}</p>
-		</span>
-		<input type="submit" value="edit" data-ng-click="edit(item.key,input)"></input><br>
-		Remove <button data-ng-click="remove(item.key)">{{item.key}}</button>
-	</li>
-</ul>
-
-<ul>
-	<li>Items in Keys</li>
-	<li data-ng-repeat="key in keys">
-		{{key}}
-	</li>
-</ul>
 
 </div>
 
